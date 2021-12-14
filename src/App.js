@@ -1,25 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from 'axios';
+import React, {useState,useEffect} from 'react'
+import {Api} from './config/Api';
+import  Tours from './component/Tours'
+import './index.css'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default function App() {
+    const [tours, setTours] = useState([]);
+    const removeTour = (id) =>{
+       const newTours =  tours.filter((tour)=> tour.id !== id);
+        setTours(newTours)
+    }
+
+    useEffect(() => {
+      takeData()
+    },[]);
+
+    const takeData = async ()=>{
+        try{
+            const tours = await axios.get(Api)
+            setTours(tours.data)
+        }catch(err){
+            alert(err)
+        }
+    }
+
+
+    return (
+        <>
+            {(tours.length > 0) ? ( 
+                <main>
+                     <Tours tours={tours}  removeTour={removeTour}/>
+                </main>
+            ) : (
+                <main>
+                    <div className='title'>
+                    <h2>no tours left</h2>
+                    <button className='btn' onClick={takeData}>
+                        refresh
+                    </button>
+                    </div>
+                 </main>
+            )}
+        </>
+       
+    )
+  
+    
 }
-
-export default App;

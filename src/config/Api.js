@@ -1,0 +1,1 @@
+export const Api = 'https://course-api.com/react-tours-project'
